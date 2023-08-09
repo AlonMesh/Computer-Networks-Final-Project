@@ -1,77 +1,152 @@
 """
-whatsapp_analysis.py: Module for analyzing WhatsApp message data and generating plots.
+whatsapp_analysis.py: Script for analyzing WhatsApp messages and generating plots.
 """
 
-import pickle
 import matplotlib.pyplot as plt
 
 
-def load_messages_from_pickle(pickle_file):
+def calculate_and_add_timestamps(csv_file_path):
     """
-    Load WhatsApp messages from a pickle file.
+    Calculate timestamps from CSV file and return a list of timestamps.
+
     Args:
-        pickle_file (str): Path to the pickle file containing the WhatsApp messages.
+        csv_file_path (str): Path to the CSV file containing packet information.
+
     Returns:
-        list: List of WhatsApp messages, each message represented as a dictionary.
+        list: List of calculated timestamps.
     """
-    with open(pickle_file, "rb") as f:
-        messages = pickle.load(f)
-    return messages
+    timestamps = []
+
+    with open(csv_file_path, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+
+        for row in csv_reader:
+            timestamps.append(datetime.fromtimestamp(float(row['Time'])))
+
+    print("Timestamps calculated and saved")
+    return timestamps
 
 
-def filter_messages_by_group(messages, group):
+def plot_inter_message_delays(timestamps, group: str):
     """
-    Filter WhatsApp messages by group.
+    Plot inter-message delays using vertical lines.
+
     Args:
-        messages (list): List of WhatsApp messages, each message represented as a dictionary.
-        group (str): The group to filter by (e.g., "messages", "images", "audio", "video").
-    Returns:
-        list: List of WhatsApp messages belonging to the specified group.
+        timestamps (list): List of timestamps.
+        group (str): Type of WhatsApp group (Message, Photo, Audio, Video).
     """
-    filtered_messages = [message for message in messages if message['group'] == group]
-    return filtered_messages
+    inter_delays = []
 
+    for i in range(1, len(timestamps)):
+        delay = timestamps[i] - timestamps[i - 1]
+        inter_delays.append(delay.total_seconds())
 
-def plot_inter_message_delays(messages, group):
-    """
-    Generate and display a plot of inter-message delays in a specific WhatsApp group.
-    Args:
-        messages (list): List of WhatsApp messages, each message represented as a dictionary.
-        group (str): The group to plot inter-message delays for (e.g., "messages", "images", "audio", "video").
-    Returns:
-        None
-    """
-    # Implement the logic to calculate inter-message delays for the specified group
-    # You can use the timestamps of consecutive messages in the group to compute the delays
-    # Create a plot using matplotlib and display the inter-message delay distribution
+    plt.figure(figsize=(12, 6))
 
-    # Example (Replace with your implementation):
-    group_messages = filter_messages_by_group(messages, group)
-    inter_message_delays = [message['timestamp'] for message in group_messages]  # Replace with actual delays
-    plt.hist(inter_message_delays, bins=20)
-    plt.xlabel("Inter-Message Delay (seconds)")
-    plt.ylabel("Frequency")
-    plt.title(f"Inter-Message Delay Distribution for {group} group")
+    # Use vlines to plot vertical lines
+    plt.vlines(range(len(inter_delays)), ymin=0, ymax=inter_delays, lw=2, color='darkslateblue', alpha=0.7)
+
+    plt.xlabel(f'{group} Index', size=12)
+    plt.ylabel(f'Inter-{group} Delay (seconds)', size=12)
+    plt.title(f'Inter-{group} Delays', size=20)
+
+    plt.ylim(0, max(inter_delays) * 1.1)
+    y_ticks = range(0, int(max(inter_delays)) + 2, 1)
+    plt.yticks(y_ticks)
+    plt.xlim(0, len(inter_delays))
+
+    plt.grid(linewidth=0.5, linestyle='--')
+
+    plt.savefig(f"../res/{group}_delays.png")
     plt.show()
 
 
-def plot_message_sizes(messages, group):
+def plot_inter_message_delays_pdf(csv_file_path, group: str):
     """
-    Generate and display a plot of message sizes in a specific WhatsApp group.
-    Args:
-        messages (list): List of WhatsApp messages, each message represented as a dictionary.
-        group (str): The group to plot message sizes for (e.g., "messages", "images", "audio", "video").
-    Returns:
-        None
-    """
-    # Implement the logic to extract message sizes for the specified group from the messages list
-    # Create a plot using matplotlib and display the message size distribution
+    Plot probability density function of inter-message delays.
 
-    # Example (Replace with your implementation):
-    group_messages = filter_messages_by_group(messages, group)
-    message_sizes = [len(message['content']) for message in group_messages]  # Replace with actual message sizes
-    plt.hist(message_sizes, bins=20)
-    plt.xlabel("Message Size (characters)")
-    plt.ylabel("Frequency")
-    plt.title(f"Message Size Distribution for {group} group")
+    Args:
+        csv_file_path (str): Path to the CSV file containing packet information.
+        group (str): Type of WhatsApp group (Message, Photo, Audio, Video).
+    """
+    timestamps = []
+
+    with open(csv_file_path, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+
+        for row in csv_reader:
+            timestamps.append(datetime.fromtimestamp(float(row['Time'])))
+
+        inter_delays = [(timestamps[i] - timestamps[i - 1]).total_seconds() for i in range(1, len(timestamps))]
+
+    # Calculate kernel density estimation (KDE) for the inter-message delays
+    kde = gaussian_kde(inter_delays)
+
+    # Generate x values for the KDE plot
+    x_vals = np.linspace(min(inter_delays), max(inter_delays), num=1000)
+
+    plt.figure(figsize=(12, 6))
+
+    plt.plot(x_vals, kde(x_vals), color='darkslateblue')
+    plt.xlabel(f'Inter-{group} Delay (seconds)', size=12)
+    plt.ylabel(f'Probability Density', size=12)
+    plt.title(f'Probability Density Function of Inter-{group} Delays', size=20)
+
+    plt.ylim(0, 1.02)
+
+    plt.grid(linewidth=0.5, linestyle='--')
+
+    plt.savefig(f"../res/{group}_delays_pdf.png")
     plt.show()
+
+
+def plot_message_sizes(csv_file_path, group: str):
+    """
+    Plot message sizes over time.
+
+    Args:
+        csv_file_path (str): Path to the CSV file containing packet information.
+        group (str): Type of WhatsApp group (Message, Photo, Audio, Video).
+    """
+    message_sizes = []
+    message_time = []
+
+    with open(csv_file_path, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+
+        for row in csv_reader:
+            message_sizes.append(int(row['Length']))
+            message_time.append(float(row['Time']))
+
+    plt.figure(figsize=(12, 6))
+
+    # Plot rounded lines with gray color
+    plt.vlines(message_time, ymin=0, ymax=message_sizes, lw=2, color='darkslateblue', alpha=0.7)
+
+    plt.xlabel('Time', size=12)
+    plt.ylabel(f'{group} Length', size=12)
+    plt.title(f'{group} Length by Time', size=20)
+
+    # Set y-axis limits and ticks
+    plt.ylim(0, max(message_sizes) + 500)
+    y_ticks = range(0, max(message_sizes) + 500, 1000)
+    plt.yticks(y_ticks)
+    plt.xlim(min(message_time) - 2, max(message_time) + 2)
+
+    plt.grid(linewidth=0.7, linestyle='--', color='lightgray')
+
+    plt.savefig(f"../res/{group}_sizes.png")
+    plt.show()
+
+
+def creating_plots(csv_file_path, group: str):
+    """
+    Generate and save plots for WhatsApp message analysis.
+
+    Args:
+        csv_file_path (str): Path to the CSV file containing packet information.
+        group (str): Type of WhatsApp group (Message, Photo, Audio, Video).
+    """
+    plot_inter_message_delays(calculate_and_add_timestamps(csv_file_path), group)
+    plot_inter_message_delays_pdf(csv_file_path, group)
+    plot_message_sizes(csv_file_path, group)

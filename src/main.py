@@ -1,58 +1,59 @@
-"""
-main.py: Main script to capture packets, extract WhatsApp messages, generate plots, and save results to pickle.
-"""
-
 import packet_capture
+import pyshark
+import csv
 import whatsapp_analysis
 
 
+def convert_pcap_to_csv(pcap_file_path, csv_file_path):
+    """
+    Convert a pcap file to a CSV file containing packet information.
+
+    Args:
+        pcap_file_path (str): Path to the input pcap file.
+        csv_file_path (str): Path to the output CSV file.
+    """
+    # Open the pcapng file for reading
+    capture = pyshark.FileCapture(pcap_file_path, display_filter='ip')  # Use display_filter if needed
+
+    # Create a CSV file and write headers
+    with open(csv_file_path, 'w', newline='') as csv_file:
+        fieldnames = ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info']
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+
+        # Iterate through packets and write to CSV
+        for packet in capture:
+            packet_data = {
+                'No.': packet.number,
+                'Time': packet.sniff_time.strftime('%Y-%m-%d %H:%M:%S.%f'),
+                'Source': packet.ip.src if 'ip' in packet else '',
+                'Destination': packet.ip.dst if 'ip' in packet else '',
+                'Protocol': packet.highest_layer,
+                'Length': packet.length,
+                'Info': packet.info if hasattr(packet, 'info') else ''
+            }
+            csv_writer.writerow(packet_data)
+
+    print(f'PCAP file converted to CSV: {csv_file_path}')
+
+
 def main():
-    interface = "YOUR_NETWORK_INTERFACE"  # Replace with your Wi-Fi network interface name
-    capture_duration = 30  # seconds
+    """
+    Main function to execute the packet conversion and analysis process.
+    """
+    GROUPS = ['Message', 'Photo', 'Audio', 'Video']
+    for group in GROUPS:
+        pcap_file_path = f"../resources/{group}s_real_1.pcap"
+        scv_file_path = f"../resources/{group}s_real_1_.csv"
+        print(f"Converting {pcap_file_path} → {scv_file_path}...")
+        convert_pcap_to_csv(pcap_file_path, csv_file_path)
+        print("Done.")
+        print(f"Starting plots for {scv_file_path}...")
+        whatsapp_analysis.creating_plots(scv_file_path, group)
+        print("Done.")
 
-    # Create a directory to store the pcap files
-    pcap_dir = '../resources'  # Replace with the desired directory path
-    os.makedirs(pcap_dir, exist_ok=True)
-
-    # Capture packets for each WhatsApp group
-    groups = ['messages', 'images', 'audio', 'video']
-    pcap_files = {}
-    for group in groups:
-        pcap_file = os.path.join(pcap_dir, f"{group}_packets.pcap")
-        print(f"Starting packet capture for {group} group...")
-        packet_capture.start_packet_capture(interface, capture_duration, pcap_file)
-        pcap_files[group] = pcap_file
-        print(f"Packet capture for {group} group complete.")
-
-    # Extract WhatsApp messages for each group
-    messages = {}
-    for group, pcap_file in pcap_files.items():
-        print(f"Extracting WhatsApp messages for {group} group...")
-        messages[group] = packet_capture.extract_whatsapp_messages(pcap_file)
-        print(f"WhatsApp message extraction for {group} group complete.")
-
-    # Create a directory to store the results
-    results_dir = '../res'  # Replace with the desired directory path
-    os.makedirs(results_dir, exist_ok=True)
-
-    # Analyze and plot for each WhatsApp group
-    for group in groups:
-        # Filter messages for the current group
-        group_messages = messages[group]
-
-        # Plot and save inter-message delays
-        whatsapp_analysis.plot_inter_message_delays(group_messages, group)
-        inter_message_delays_file = os.path.join(results_dir, f"{group}_inter_message_delays.pickle")
-        with open(inter_message_delays_file, 'wb') as f:
-            pickle.dump(group_messages, f)
-
-        # Plot and save message sizes
-        whatsapp_analysis.plot_message_sizes(group_messages, group)
-        message_sizes_file = os.path.join(results_dir, f"{group}_message_sizes.pickle")
-        with open(message_sizes_file, 'wb') as f:
-            pickle.dump(group_messages, f)
-
-    print("Plots generated and results saved to pickle.")
+    pcap_file = "../resources"
+    convert_pcap_to_csv(pcap_file, r'C:\Users\Alon\Downloads\tryTOconvert.pcap\output.csv')
 
 
 if __name__ == "__main__":
