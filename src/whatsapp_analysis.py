@@ -3,6 +3,10 @@ whatsapp_analysis.py: Script for analyzing WhatsApp messages and generating plot
 """
 
 import matplotlib.pyplot as plt
+import csv
+from datetime import datetime, timedelta
+from scipy.stats import gaussian_kde
+import numpy as np
 
 
 def calculate_and_add_timestamps(csv_file_path):
@@ -57,7 +61,7 @@ def plot_inter_message_delays(timestamps, group: str):
 
     plt.grid(linewidth=0.5, linestyle='--')
 
-    plt.savefig(f"../res/{group}_delays.png")
+    plt.savefig(f"res/{group}_delays.png")
     plt.show()
 
 
@@ -96,9 +100,50 @@ def plot_inter_message_delays_pdf(csv_file_path, group: str):
 
     plt.grid(linewidth=0.5, linestyle='--')
 
-    plt.savefig(f"../res/{group}_delays_pdf.png")
+    plt.savefig(f"res/{group}_delays_pdf.png")
     plt.show()
 
+
+# def plot_message_sizes(csv_file_path, group: str):
+#     """
+#     Plot message sizes over time.
+#
+#     Args:
+#         csv_file_path (str): Path to the CSV file containing packet information.
+#         group (str): Type of WhatsApp group (Message, Photo, Audio, Video).
+#     """
+#     message_sizes = []
+#     message_time = []
+#
+#     with open(csv_file_path, 'r') as csv_file:
+#         csv_reader = csv.DictReader(csv_file)
+#
+#         for row in csv_reader:
+#             message_sizes.append(int(row['Length']))
+#             message_time.append(float(row['Time']))
+#
+#     plt.figure(figsize=(12, 6))
+#
+#     # Plot rounded lines with gray color
+#     plt.vlines(message_time, ymin=0, ymax=message_sizes, lw=2, color='darkslateblue', alpha=0.7)
+#
+#     # Add black circles at the end of each line
+#     #     plt.plot(message_time, message_sizes, 'o', color="g", markersize=5, alpha=0.3)
+#
+#     plt.xlabel('Time', size=12)
+#     plt.ylabel(f'{group} Length', size=12)
+#     plt.title(f'{group} Length by Time', size=20)
+#
+#     # Set y-axis limits and ticks
+#     plt.ylim(0, max(message_sizes) + 500)
+#     y_ticks = range(0, max(message_sizes) + 500, 1000)
+#     plt.yticks(y_ticks)
+#     plt.xlim(min(message_time) - 2, max(message_time) + 2)
+#
+#     plt.grid(linewidth=0.7, linestyle='--', color='lightgray')
+#
+#     plt.savefig(f"res/{group}_sizes.png")
+#     plt.show()
 
 def plot_message_sizes(csv_file_path, group: str):
     """
@@ -123,6 +168,9 @@ def plot_message_sizes(csv_file_path, group: str):
     # Plot rounded lines with gray color
     plt.vlines(message_time, ymin=0, ymax=message_sizes, lw=2, color='darkslateblue', alpha=0.7)
 
+    # Add black circles at the end of each line
+    #     plt.plot(message_time, message_sizes, 'o', color="g", markersize=5, alpha=0.3)
+
     plt.xlabel('Time', size=12)
     plt.ylabel(f'{group} Length', size=12)
     plt.title(f'{group} Length by Time', size=20)
@@ -135,7 +183,7 @@ def plot_message_sizes(csv_file_path, group: str):
 
     plt.grid(linewidth=0.7, linestyle='--', color='lightgray')
 
-    plt.savefig(f"../res/{group}_sizes.png")
+    plt.savefig(f"res/{group}_sizes.png")
     plt.show()
 
 
