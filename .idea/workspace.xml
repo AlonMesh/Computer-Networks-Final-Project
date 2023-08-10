@@ -2,20 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="134f15c4-2750-4a3d-90bb-5dbf1716b653" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/207964487_208580076.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/Audios_record.pcap" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/Messages_record.pcap" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/Photos_record.pcap" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/Videos_record.pcap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/whatsapp_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/whatsapp_analysis.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +175,13 @@
       <option name="presentableId" value="LOCAL‎00006" />
       <updated>1691616218004</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL‎00007" summary="Final Version 1.0">
+      <created>1691668340123</created>
+      <option name="number" value="LOCAL‎00007" />
+      <option name="presentableId" value="LOCAL‎00007" />
+      <updated>1691668340123</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -207,6 +201,7 @@
     <MESSAGE value="Base templates" />
     <MESSAGE value="AdvancedVersion" />
     <MESSAGE value="Time Format Fix and Exception Handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Time Format Fix and Exception Handling" />
+    <MESSAGE value="Final Version 1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final Version 1.0" />
   </component>
 </project>

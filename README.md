@@ -17,14 +17,22 @@ Modern Instant Messaging (IM) applications, including WhatsApp, rely on encrypte
 ### How to Use
 
 1. Ensure you have Python installed.
-2. Install required packages using `pip install numpy pyshark matplotlib`.
-3. Place your pcap or pcapng files in the `resources/` folder.
+2. Install the required packages using `pip install numpy pyshark matplotlib`.
+3. **Important Note:** You need to obtain the pcap files on your own. We recommend using Wireshark to capture network traffic. Make sure to name each pcap file following the format "<x>s_record" (e.g., "Messages_record"). Additionally, manually add "<x>" as an element in the `GROUPS` list within the `main.py` script.
+4. Place the pcap files you've acquired in the `resources/` folder.
+5.  Run the command below.
 
 #### Running
 
-Run `python .\src\main.py` to convert packet captures to CSV format and generate plots:
+Run the next `python` command to convert packet captures to CSV format and generate plots:
+```python
+python .\src\main.py
+```
 
-The script will convert pcap files in the `resources/` folder to CSV format and save them in the same folder. Then, the script will analyze the CSV files and create plots for inter-message delays and message sizes. The plots will be saved in the `res/` folder.
+####The script performs the following steps:
+
+1. Converts pcap files to CSV format with packet information in the `resources/` folder.
+2. Generates plots in the `res/` folder to analyze inter-message delays, message sizes, and probability density functions.
 
 ### Plots and Analysis
 1. **Inter-Message Delay Plot:** This plot shows the time delay between consecutive messages in a specific WhatsApp group. It highlights the temporal patterns of message transmission within the group.
