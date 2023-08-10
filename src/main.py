@@ -1,7 +1,7 @@
 import pyshark
 import csv
-import whatsapp_analysis
 import os
+import whatsapp_analysis  # The second file
 
 
 def convert_pcap_to_csv(pcap_file_path, csv_file_path):
@@ -48,27 +48,20 @@ def convert_pcap_to_csv(pcap_file_path, csv_file_path):
 
 
 def main():
-    """
-    Main function to execute the packet conversion and analysis process.
-    """
     # Modify this list to specify different WhatsApp group types for analysis
-    # GROUPS = ['Message', 'Photo', 'Audio', 'Video']
-    GROUPS = ['try']
-
+    GROUPS = ['Message', 'Photo', 'Audio', 'Video']
+    # GROUPS = ['YesFilter', 'NoFilter']
     for group in GROUPS:
-        pcap_file_path = f"resources/{group}s_real_1.pcap"
-        csv_file_path = f"resources/{group}s_real_1.csv"
-
+        pcap_file_path = f"resources/{group}s_record.pcap"
+        csv_file_path = f"resources/{group}s_record.csv"
         if not os.path.exists(pcap_file_path):
             raise FileNotFoundError(f"{pcap_file_path} does not exist.")
-
         try:
             print(f"Converting {pcap_file_path} → {csv_file_path} ...")
             convert_pcap_to_csv(pcap_file_path, csv_file_path)
             print("Conversion complete.")
         except Exception as e:
             print(f"Error occurred during conversion: {e}")
-
         try:
             print(f"Starting plots for {csv_file_path} ...")
             whatsapp_analysis.creating_plots(csv_file_path, group)
