@@ -29,7 +29,7 @@ Run the next `python` command to convert packet captures to CSV format and gener
 python .\src\main.py
 ```
 
-####The script performs the following steps:
+#### The script performs the following steps:
 
 1. Converts pcap files to CSV format with packet information in the `resources/` folder.
 2. Generates plots in the `res/` folder to analyze inter-message delays, message sizes, and probability density functions.

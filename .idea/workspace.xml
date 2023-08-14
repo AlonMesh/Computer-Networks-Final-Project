@@ -199,7 +199,13 @@
       <option name="presentableId" value="LOCAL‎00010" />
       <updated>1692029457976</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL‎00011" summary="Update README.md">
+      <created>1692029555126</created>
+      <option name="number" value="LOCAL‎00011" />
+      <option name="presentableId" value="LOCAL‎00011" />
+      <updated>1692029555126</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -220,9 +226,9 @@
     <MESSAGE value="AdvancedVersion" />
     <MESSAGE value="Time Format Fix and Exception Handling" />
     <MESSAGE value="Final Version 1.0" />
-    <MESSAGE value="Update README.md" />
     <MESSAGE value="Update README.md &amp; Adding files" />
     <MESSAGE value="Final Version 1.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Final Version 1.1" />
+    <MESSAGE value="Update README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update README.md" />
   </component>
 </project>
