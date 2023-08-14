@@ -36,11 +36,11 @@ python .\src\main.py
 ----
 ### Plots and Analysis
 1. **Inter-Message Delay Plot:** This plot shows the time delay between consecutive messages in a specific WhatsApp group. It highlights the temporal patterns of message transmission within the group.
-![img_2.png](img_2.png)
+![img_2.png](IMGs/img_2.png)
 2. **Probability Density Function (PDF) Plot:** The PDF plot provides a visual representation of the probability distribution of inter-message delays. It helps to visualize the likelihood of different delays between messages in the group.
-![img_3.png](img_3.png)
+![img_3.png](IMGs/img_3.png)
 3. **Message Size Plot:** This plot depicts the sizes of messages over time. It enables the observation of variations in message lengths and potential trends within the communication.
-![img_4.png](img_4.png)
+![img_4.png](IMGs/img_4.png)
 Please see the `res/` folder for the generated plots corresponding to each analysis.
 
 ----
@@ -52,9 +52,9 @@ To perform this analysis, two distinct pcap files are utilized: one filtered for
 
 An interesting application of this analysis arises in the realm of potential security concerns. In cases where an attacker gains access to a user's traffic and is also capable of sending messages within a specific group, they could employ this information to cross-reference whether packets they sent at a given time and with specific characteristics align with the user's traffic. This alignment could enable an attacker to infer if their own packets were successfully transmitted within the user's communication flow.
 
-![img.png](img.png)
+![img.png](IMGs/img.png)
 
-![img_1.png](img_1.png)
+![img_1.png](IMGs/img_1.png)
 
 -----
 
